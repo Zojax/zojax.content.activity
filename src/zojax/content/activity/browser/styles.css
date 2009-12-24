@@ -1,0 +1,39 @@
+/* zrt-cssregistry: */
+
+@media all {
+
+  .portlet-activity .z-portlet-item { 
+    padding-left: 0.5em;
+    line-height: 1.4em;
+  }
+
+  .portlet-activity .z-portlet-item-details { 
+    clear: both;
+    color: discreetColor;
+  }
+
+  .portlet-activity .z-portlet-item a:hover {
+    border: none;
+    color: globalExtraColor;
+    text-decoration: underline;
+  }
+
+  .portlet-activity div.t-avatar { 
+    float: left;
+    padding-right: 0.5em;
+    width: 31px;
+    text-align: center;
+  }
+
+  .portlet-activity .t-avatar img {
+    padding: 2px;
+    width: 26px;
+    height: auto;
+    border: 1px solid globalBorderColor;
+  }
+
+  .portlet-activity .activity-verb { 
+    text-transform: lowercase;
+  }
+
+}

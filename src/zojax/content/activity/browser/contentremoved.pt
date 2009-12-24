@@ -1,0 +1,3 @@
+<span class="discreet" i18n:domain="zojax.content.activity"
+      i18n:translate="">Content removed: </span>
+<tal:block tal:content="context/objectTitle"/>

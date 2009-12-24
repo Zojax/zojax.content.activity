@@ -1,0 +1,75 @@
+=======
+CHANGES
+=======
+
+
+0.4.4 (2009-11-25)
+------------------
+
+- Fixed ActivityTag update for non existent object
+
+
+0.4.3 (2009-10-15)
+------------------
+
+- Fixed activity portlet cache and activity type filter
+
+
+0.4.2 (2009-08-16)
+------------------
+
+- Fixed activity rss feed
+
+
+0.4.1 (2009-08-11)
+------------------
+
+- Added default content activity record view
+
+- Handle None value in AuthorColumn
+
+
+0.4.0 (2009-07-15)
+------------------
+
+- Added caching for portlet
+
+
+0.3.0 (2009-06-21)
+------------------
+
+- Use newer personal profile api
+
+- Added label field to recent activity portlet
+
+- Added object type to removed activity record
+
+- Remove zojax.content.draft dependency
+
+- Copyright changed to 'Zope Foundation and Contributors'
+
+
+0.2.2 (2009-05-07)
+------------------
+
+- Tests updated
+
+
+0.2.1 (2009-05-05)
+------------------
+
+- Fixed modified handler
+
+
+0.2.0 (2009-05-05)
+------------------
+
+- Use current context for portlet
+
+- Fixed portlet title
+
+
+0.1.0 (2009-04-08)
+------------------
+
+- Initial release.

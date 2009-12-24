@@ -1,0 +1,82 @@
+<configure
+   xmlns="http://namespaces.zope.org/zope"
+   xmlns:i18n="http://namespaces.zope.org/i18n"
+   xmlns:zojax="http://namespaces.zope.org/zojax"
+   xmlns:browser="http://namespaces.zope.org/browser"
+   i18n_domain="zojax.content.activity">
+
+  <!-- cache -->
+  <subscriber handler=".cache.activityHandler" />
+
+  <!-- created -->
+  <adapter factory=".created.ContentCreatedRecord" />
+  
+  <class class=".created.ContentCreatedRecord">
+    <require
+       permission="zope.Public"
+       interface=".interfaces.IContentCreatedRecord" />
+  </class>
+
+  <utility
+     name="created"
+     factory=".created.ContentCreatedRecordDescription" />
+
+  <subscriber handler=".created.contentCreatedHandler" />
+
+  <!-- modified -->
+  <adapter factory=".modified.ContentModifiedRecord" />
+  
+  <class class=".modified.ContentModifiedRecord">
+    <require
+       permission="zope.Public"
+       interface=".interfaces.IContentModifiedRecord" />
+  </class>
+
+  <utility
+     name="modified"
+     factory=".modified.ContentModifiedRecordDescription" />
+
+  <subscriber handler=".modified.contentModifiedHandler" />
+
+  <!-- removed -->
+  <adapter factory=".moved.ContentRemovedRecord" />
+  
+  <class class=".moved.ContentRemovedRecord">
+    <require
+       permission="zope.Public"
+       interface=".interfaces.IContentRemovedRecord" />
+  </class>
+
+  <utility
+     name="removed"
+     factory=".moved.ContentRemovedRecordDescription" />
+
+  <subscriber handler=".moved.contentRemovedHandler" />
+
+  <!-- pagelet types -->
+  <zojax:pageletType
+     name="activity.portlet.record"
+     interface=".interfaces.IActivityPortletRecordView" />
+
+  <zojax:pageletType
+     name="activity.record.description"
+     interface=".interfaces.IActivityRecordDescriptionView" />
+
+  <!-- portlet -->
+  <zojax:portlet
+     title="Recent activity"
+     name="portlet.activity"
+     description="List of recent portal activity."
+     class=".portlet.ActivityPortlet"
+     schema=".interfaces.IActivityPortlet" />
+
+  <!-- rss feed -->
+  <include file="feeds.zcml" />
+
+  <!-- browser views -->
+  <include package=".browser" />
+
+  <!-- translations -->
+  <i18n:registerTranslations directory="locales" />
+
+</configure>
