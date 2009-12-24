@@ -1,0 +1,79 @@
+<configure
+   xmlns="http://namespaces.zope.org/zope"
+   xmlns:zojax="http://namespaces.zope.org/zojax"
+   xmlns:browser="http://namespaces.zope.org/browser"
+   i18n_domain="zojax.content.activity">
+  
+  <!-- content.activity table -->
+  <adapter
+     name="content.activity"
+     provides="zope.contentprovider.interfaces.IContentProvider"
+     factory=".activity.ActivityTable" />
+
+  <adapter
+     name="type"
+     factory=".activity.TypeColumn" />
+
+  <adapter
+     name="author"
+     factory=".activity.AuthorColumn" />
+
+  <adapter
+     name="date"
+     factory=".activity.DateColumn" />
+
+  <adapter
+     name="description"
+     factory=".activity.DescriptionColumn" />
+
+  <!-- edit content step -->
+  <zojax:pagelet
+     name="activity"
+     title="Activity"
+     type="wizard.step"
+     for="zojax.activity.interfaces.IActivityAware
+	  zojax.content.forms.interfaces.IEditContentWizard"
+     template="activitystep.pt"
+     class=".activitystep.ActivityStep"
+     permission="zope.View"
+     weight="999999" />
+
+  <!-- content activity record view -->
+  <zojax:pagelet
+     type="activity.record.description"
+     for="..interfaces.IContentActivityRecord"
+     template="contentactivity.pt" />
+
+  <!-- content modified record view -->
+  <zojax:pagelet
+     type="activity.record.description"
+     for="..interfaces.IContentModifiedRecord"
+     template="contentmodified.pt"
+     class=".contentmodified.ContentModified" />
+
+  <!-- content removed record view -->
+  <zojax:pagelet
+     type="activity.record.description"
+     for="..interfaces.IContentRemovedRecord"
+     template="contentremoved.pt" />
+
+  <!-- content activity record portlet record view -->
+  <zojax:pagelet
+     type="activity.portlet.record"
+     for="..interfaces.IContentActivityRecord"
+     template="portletrecord.pt" 
+     class=".portletrecord.PortletRecordView" />
+
+  <!-- portlet view -->
+  <zojax:pagelet
+     type="portlet.view"
+     template="portlet.pt"
+     for="..interfaces.IActivityPortlet" />
+
+  <!-- styles -->
+  <zojax:resourceinclude
+     name="zojax-content-activity.css"
+     library="zojax"
+     type="stylesheet" file="styles.css" filetype="zrt" />
+
+</configure>

@@ -1,0 +1,236 @@
+=============
+Browser tests
+=============
+
+    >>> from zope import interface, component, event
+    >>> from zope.app.component.hooks import setSite
+    >>> from zope.testbrowser.testing import Browser
+    >>> from zope.security.management import newInteraction, endInteraction
+    >>> from zope.app.security.interfaces import IAuthentication
+    >>> from zojax.cache.testing import setUpCache
+
+    >>> root = getRootFolder()
+    >>> setSite(root)
+    >>> sm = root.getSiteManager()
+    >>> setUpCache()
+
+    >>> admin = Browser()
+    >>> admin.addHeader("Authorization", "Basic mgr:mgrpw")
+    >>> admin.handleErrors = False
+
+    >>> anon = Browser()
+    >>> anon.handleErrors = False
+
+    >>> class Participation:
+    ...     interaction = None
+    ...     def __init__(self, principal):
+    ...         self.principal = principal
+
+    >>> auth = sm.getUtility(IAuthentication)
+
+
+activity portlet
+
+    >>> admin.open('http://localhost/tests.html')
+    >>> print admin.contents
+    <!DOCTYPE html...
+    ...
+    <h2 class="z-portlet-header">
+      <a class="z-portlet-feed" title="RSS feed"
+         href="http://localhost/@@feeds/activity">
+        <img src="http://localhost/@@/rss-icon.png" />
+      </a>
+      Recent activity
+    </h2>
+    <div class="z-portlet-body">
+      <div class="z-portlet-item odd">There is no current activity.</div>
+    </div>
+    ...
+    </html>
+
+    >>> endInteraction()
+    >>> newInteraction(Participation(auth.getPrincipal('zope.mgr')))
+
+    >>> from zojax.content.activity.tests.tests import Content
+    >>> from zope.lifecycleevent import ObjectCreatedEvent, ObjectModifiedEvent, Attributes
+
+    >>> content = Content(title=u'Content 1')
+    >>> event.notify(ObjectCreatedEvent(content))
+
+    >>> root['content'] = content
+
+    >>> from zojax.activity.interfaces import IActivity, IActivityAware
+    >>> from zojax.content.type.interfaces import IItem
+
+    >>> activity = component.getUtility(IActivity)
+    >>> list(activity.records.items())
+    []
+
+    >>> del root['content']
+
+    >>> interface.alsoProvides(content, IActivityAware)
+    >>> event.notify(ObjectCreatedEvent(content))
+
+    >>> root['content'] = content
+
+    >>> rec = activity.records.items()[0][1]
+    >>> rec
+    <zojax.content.activity.created.ContentCreatedRecord ...>
+
+    >>> rec.object is content
+    True
+
+    >>> from zojax.content.activity.tests.tests import Content2
+    >>> root['content999'] = Content2()
+
+    >>> len(activity.records)
+    1
+
+    >>> endInteraction()
+
+    >>> admin.reload()
+    >>> print admin.contents
+    <!DOCTYPE html PUBLIC...
+    ...
+    <h2 class="z-portlet-header">
+      <a class="z-portlet-feed" title="RSS feed" href="http://localhost/@@feeds/activity">
+         <img src="http://localhost/@@/rss-icon.png" />
+      </a>
+      Recent activity
+    </h2>
+    <div class="z-portlet-body">
+      <div class="z-portlet-item odd">
+        <div class="t-avatar">
+          <a href="http://localhost/people/manager/">
+             <img src="http://localhost/@@profile.avatar/0" title="Manager" />
+          </a>
+        </div><a href="http://localhost/people/manager/">Manager</a><span class="activity-verb"> Created
+           </span><a href="http://localhost/content/" title="">Content 1</a><div class="z-portlet-item-details">...0 second(s) ago...</div>
+        </div>
+      </div>
+    </div>...
+    ...
+    </html>
+
+    >>> newInteraction(Participation(auth.getPrincipal('zope.mgr')))
+
+    >>> event.notify(ObjectModifiedEvent(
+    ...     root['content999'], *(Attributes(IItem, ('title',)),)))
+    >>> len(activity.records)
+    1
+
+    >>> event.notify(ObjectModifiedEvent(content))
+    >>> len(activity.records)
+    1
+
+    >>> event.notify(ObjectModifiedEvent(
+    ...     content, *(Attributes(IItem, ('title',)),)))
+    >>> len(activity.records)
+    2
+
+    >>> rec = activity.records.items()[-1][1]
+    >>> rec
+    <zojax.content.activity.modified.ContentModifiedRecord ...>
+
+    >>> rec.attributes[0].interface, rec.attributes[0].attributes
+    (<InterfaceClass zojax.content.type.interfaces.IItem>, (('title',),))
+
+second modified
+
+    >>> event.notify(ObjectModifiedEvent(
+    ...     content, *(Attributes(IItem, ('description',)),)))
+    >>> len(activity.records)
+    2
+
+    >>> rec = activity.records.items()[-1][1]
+    >>> rec
+    <zojax.content.activity.modified.ContentModifiedRecord ...>
+
+    >>> rec.attributes[0].interface, rec.attributes[0].attributes
+    (<InterfaceClass zojax.content.type.interfaces.IItem>, ('description', 'title'))
+
+    >>> endInteraction()
+
+    >>> admin.open('http://localhost/content/context.html')
+    >>> print admin.contents
+    <!DOCTYPE html PUBLIC...
+    ...
+    ...<h2>Content activity</h2>
+      <div class="z-page-description"></div>
+      <div class="z-table-container">
+      <table class="z-table z-content-activity">
+        <thead>
+          <tr>
+            <th>Type</th> <th>Member</th> <th>Date</th> <th>Description</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr class="z-table-record odd">
+            <td class="ctb-activity-type">Modified</td> <td class="ctb-author">
+            <div>
+              <a title="View profile"
+                 href="http://localhost/people/manager/">Manager</a>
+            </div>
+            </td> <td class="ctb-activity-date">...</td> <td class="ctb-activity-desc"><span class="discreet">Modified fields: </span>
+        Description, Title</td>
+          </tr> <tr class="z-table-record even">
+              <td class="ctb-activity-type">Created</td> <td class="ctb-author">
+              <div>
+                <a title="View profile"
+                   href="http://localhost/people/manager/">Manager</a>
+              </div>
+              </td> <td class="ctb-activity-date">...</td> <td class="ctb-activity-desc"><span class="discreet">Content object has been created.</span></td>
+          </tr>
+        </tbody>
+      </table>
+    </div>...
+    ...
+    </html>
+
+    >>> admin.open('http://localhost/content/@@feeds/activity')
+    >>> print admin.contents
+    <?xml version="1.0" encoding="UTF-8"?>
+    <rss xmlns:atom="http://www.w3.org/2005/Atom" version="2.0">
+      <channel>
+        <title>Recent activity - Content 1</title>
+        <link>http://localhost/content/</link>
+        <description>Content recent activity.</description>
+        <atom:link rel="self" type="application/rss+xml"
+                   href="http://localhost/content/@@feeds/activity"/>
+        <item>
+          <title>Modified</title>
+          <description>by Manager on Content 1</description>
+          <guid isPermaLink="true">...</guid>
+          <link>http://localhost/content/</link>
+          <author> (Manager)</author>
+          <pubDate>...</pubDate>
+        </item>
+        <item>
+          <title>Created</title>
+          <description>by Manager on Content 1</description>
+          <guid isPermaLink="true">...</guid>
+          <link>http://localhost/content/</link>
+          <author> (Manager)</author>
+          <pubDate>...</pubDate>
+        </item>
+      </channel>
+    </rss>
+
+    >>> newInteraction(Participation(auth.getPrincipal('zope.mgr')))
+
+    >>> interface.alsoProvides(root, IActivityAware)
+
+    >>> del root['content']
+
+    >>> len(activity.records)
+    1
+
+    >>> rec = activity.records.items()[-1][1]
+    >>> rec
+    <zojax.content.activity.moved.ContentRemovedRecord ...>
+
+    >>> rec.objectTitle
+    u'Content 1'
+
+    >>> endInteraction()
+    >>> setSite(None)

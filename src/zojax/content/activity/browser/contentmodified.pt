@@ -1,0 +1,6 @@
+<tal:block condition="view/fields" i18n:domain="zojax.content.activity">
+  <span class="discreet" i18n:translate="">Modified fields: </span>
+  <tal:block tal:repeat="field view/fields">
+    <tal:block content="field" /><tal:block condition="not:repeat/field/end">,</tal:block>
+  </tal:block>
+</tal:block>

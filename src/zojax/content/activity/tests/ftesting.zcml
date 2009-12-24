@@ -1,0 +1,71 @@
+<configure
+   xmlns="http://namespaces.zope.org/zope"
+   xmlns:zojax="http://namespaces.zope.org/zojax"
+   xmlns:browser="http://namespaces.zope.org/browser"
+   i18n_domain="zope">
+
+  <include package="zojax.autoinclude" file="meta.zcml" />
+  <includeAllDependencies package="zojax.content.activity" extras="test" />
+
+  <!--includeOverrides package="zojax.content.activity.tests" file="overrides.zcml" -->
+
+  <interface
+     name="DefaultSkin"
+     interface="zojax.content.activity.tests.tests.IDefaultSkin"
+     type="zope.publisher.interfaces.browser.IBrowserSkinType" />
+
+  <browser:defaultSkin name="DefaultSkin" />
+
+  <zojax:pagelet
+     name="tests.html"
+     for="*"
+     template="tests.pt"
+     permission="zope.Public" />
+
+  <zojax:content
+     name="content"
+     title="Content"
+     schema="zojax.content.activity.tests.tests.IContent"
+     class="zojax.content.activity.tests.tests.Content" />
+
+  <class class="zojax.content.activity.tests.tests.Content">
+    <require
+       permission="zope.View"
+       interface="zojax.content.activity.tests.tests.IContent" />
+  </class>
+
+  <securityPolicy component="zojax.security.securitypolicy.SecurityPolicy" />
+
+  <role id="zope.Anonymous" title="Everybody"
+        description="All users have this role implicitly" />
+  <role id="zope.Manager" title="Site Manager" />
+
+  <!-- Replace the following directive if you don't want public access -->
+  <grant permission="zope.View"
+         role="zope.Anonymous" />
+
+  <grant permission="zope.app.dublincore.view"
+         role="zope.Anonymous" />
+
+  <!-- Principals -->
+  <unauthenticatedPrincipal
+      id="zope.anybody"
+      title="Unauthenticated User" />
+
+  <!-- Principal that tests generally run as -->
+  <principal
+      id="zope.mgr"
+      title="Manager"
+      login="mgr"
+      password="mgrpw" />
+
+  <everybodyGroup
+      id="zope.Everybody"
+      title="All Users"
+      />
+
+  <grant role="zope.Manager" principal="zope.mgr" />
+
+  <grantAll role="zope.Manager" />
+
+</configure>

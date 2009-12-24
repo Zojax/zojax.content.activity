@@ -1,0 +1,1 @@
+<span class="discreet" tal:content="context/description/description"></span>

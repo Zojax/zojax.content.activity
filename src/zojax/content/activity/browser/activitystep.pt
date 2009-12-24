@@ -1,0 +1,9 @@
+<tal:block i18n:domain="zojax.content.activity">
+  <h2 i18n:translate="">Content activity</h2>
+  <div class="z-page-description"></div>
+
+  <tal:block define="context nocall:view/context"
+	     content="structure provider:content.activity" />
+
+  <br />
+</tal:block>
