@@ -161,7 +161,7 @@ second modified
       <table class="z-table z-content-activity">
         <thead>
           <tr>
-            <th>Type</th> <th>Member</th> <th>Date</th> <th>Description</th>
+            <th class="ctb-activity-type">Type</th> <th class="ctb-author">Member</th> <th class="ctb-activity-date">Date</th> <th class="ctb-activity-desc">Description</th>
           </tr>
         </thead>
         <tbody>
