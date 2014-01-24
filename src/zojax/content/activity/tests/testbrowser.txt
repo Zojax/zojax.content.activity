@@ -135,6 +135,7 @@ activity portlet
     >>> rec.attributes[0].interface, rec.attributes[0].attributes
     (<InterfaceClass zojax.content.type.interfaces.IItem>, (('title',),))
 
+
 second modified
 
     >>> event.notify(ObjectModifiedEvent(
@@ -155,66 +156,84 @@ second modified
     >>> print admin.contents
     <!DOCTYPE html PUBLIC...
     ...
-    ...<h2>Content activity</h2>
+      <h2>Content activity</h2>
       <div class="z-page-description"></div>
+    <BLANKLINE>
       <div class="z-table-container">
       <table class="z-table z-content-activity">
         <thead>
+    <BLANKLINE>
           <tr>
-            <th class="ctb-activity-type">Type</th> <th class="ctb-author">Member</th> <th class="ctb-activity-date">Date</th> <th class="ctb-activity-desc">Description</th>
+    	<th class="ctb-activity-type">Type</th> <th class="ctb-author">Member</th> <th class="ctb-activity-date">Date</th> <th class="ctb-activity-desc">Description</th>
           </tr>
         </thead>
         <tbody>
           <tr class="z-table-record odd">
-            <td class="ctb-activity-type">Modified</td> <td class="ctb-author">
-            <div>
-              <a title="View profile"
-                 href="http://localhost/people/manager/">Manager</a>
-            </div>
-            </td> <td class="ctb-activity-date">...</td> <td class="ctb-activity-desc"><span class="discreet">Modified fields: </span>
-        Description, Title</td>
+    	<td class="ctb-activity-type">Modified</td> <td class="ctb-author">
+    <BLANKLINE>
+      <div>
+        <a title="View profile"
+           href="http://localhost/people/manager/">Manager</a>
+      </div>
+    <BLANKLINE>
+    </td> <td class="ctb-activity-date">...</td> <td class="ctb-activity-desc">
+      <span class="discreet">Modified fields: </span>
+    <BLANKLINE>
+        Description,
+        Title</td>
           </tr> <tr class="z-table-record even">
-              <td class="ctb-activity-type">Created</td> <td class="ctb-author">
-              <div>
-                <a title="View profile"
-                   href="http://localhost/people/manager/">Manager</a>
-              </div>
-              </td> <td class="ctb-activity-date">...</td> <td class="ctb-activity-desc"><span class="discreet">Content object has been created.</span></td>
+    	<td class="ctb-activity-type">Created</td> <td class="ctb-author">
+    <BLANKLINE>
+      <div>
+        <a title="View profile"
+           href="http://localhost/people/manager/">Manager</a>
+      </div>
+    <BLANKLINE>
+    </td> <td class="ctb-activity-date">...</td> <td class="ctb-activity-desc"><span class="discreet">Content object has been created.</span></td>
           </tr>
         </tbody>
-      </table>
-    </div>...
     ...
     </html>
+
 
     >>> admin.open('http://localhost/content/@@feeds/activity')
     >>> print admin.contents
     <?xml version="1.0" encoding="UTF-8"?>
     <rss xmlns:atom="http://www.w3.org/2005/Atom" version="2.0">
       <channel>
-        <title>Recent activity - Content 1</title>
+        <title>Recent activity - Content 1
+    </title>
         <link>http://localhost/content/</link>
         <description>Content recent activity.</description>
+    <BLANKLINE>
+    <BLANKLINE>
+    <BLANKLINE>
+    <BLANKLINE>
+    <BLANKLINE>
         <atom:link rel="self" type="application/rss+xml"
                    href="http://localhost/content/@@feeds/activity"/>
         <item>
           <title>Modified</title>
-          <description>by Manager on Content 1</description>
+          <description type="html"><![CDATA[by Manager on Content 1]]></description>
           <guid isPermaLink="true">...</guid>
           <link>http://localhost/content/</link>
           <author> (Manager)</author>
+    <BLANKLINE>
           <pubDate>...</pubDate>
         </item>
         <item>
           <title>Created</title>
-          <description>by Manager on Content 1</description>
+          <description type="html"><![CDATA[by Manager on Content 1]]></description>
           <guid isPermaLink="true">...</guid>
           <link>http://localhost/content/</link>
           <author> (Manager)</author>
+    <BLANKLINE>
           <pubDate>...</pubDate>
         </item>
       </channel>
     </rss>
+    <BLANKLINE>
+
 
     >>> newInteraction(Participation(auth.getPrincipal('zope.mgr')))
 
