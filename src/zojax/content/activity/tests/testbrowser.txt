@@ -154,7 +154,7 @@ second modified
 
     >>> admin.open('http://localhost/content/context.html')
     >>> print admin.contents
-    <!DOCTYPE html PUBLIC...
+    <!DOCTYPE html PUBLIC ...
     ...
       <h2>Content activity</h2>
       <div class="z-page-description"></div>
@@ -170,28 +170,21 @@ second modified
         <tbody>
           <tr class="z-table-record odd">
     	<td class="ctb-activity-type">Modified</td> <td class="ctb-author">
-    <BLANKLINE>
       <div>
         <a title="View profile"
            href="http://localhost/people/manager/">Manager</a>
       </div>
-    <BLANKLINE>
     </td> <td class="ctb-activity-date">...</td> <td class="ctb-activity-desc">
       <span class="discreet">Modified fields: </span>
-    <BLANKLINE>
         Description,
         Title</td>
           </tr> <tr class="z-table-record even">
     	<td class="ctb-activity-type">Created</td> <td class="ctb-author">
-    <BLANKLINE>
       <div>
         <a title="View profile"
            href="http://localhost/people/manager/">Manager</a>
       </div>
-    <BLANKLINE>
     </td> <td class="ctb-activity-date">...</td> <td class="ctb-activity-desc"><span class="discreet">Content object has been created.</span></td>
-          </tr>
-        </tbody>
     ...
     </html>
 
